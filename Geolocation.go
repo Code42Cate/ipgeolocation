@@ -4,7 +4,6 @@ package ipgeolocation
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"net"
 	"net/http"
 	"net/url"
@@ -18,6 +17,8 @@ type Options struct {
 	Language string
 	Exclude  []string
 	Include  []string
+	Security bool
+	Hostname bool
 }
 
 // Helper function to validate include/exclude fields
@@ -29,6 +30,16 @@ func isDataField(field string) bool {
 		}
 	}
 	return false
+}
+
+// SetSecurity enables/disables Security fields, Premium only!
+func (c *Options) SetSecurity(value bool) {
+	c.Security = value
+}
+
+// SetHostname enables Hostname field, Premium only!
+func (c *Options) SetHostname(value bool) {
+	c.Hostname = value
 }
 
 // SetIncludes calls SetInclude for each element. Returns non-nil error if one of the elements failed
@@ -111,6 +122,7 @@ type GeolocationData struct {
 	IsEU           bool   `json:"is_eu"`
 	CallingCode    string `json:"calling_code"`
 	CountryTLD     string `json:"country_tld"`
+	Hostname       string `json:"hostname"`
 	Languages      string `json:"languages"`
 	CountryFlag    string `json:"country_flag"`
 	GeonameID      string `json:"geoname_id"`
@@ -130,6 +142,15 @@ type GeolocationData struct {
 		IsDST           bool    `json:"is_dst"`
 		DSTSavings      int     `json:"dst_savings"`
 	} `json:"time_zone"`
+	Security struct {
+		ThreatScore     int    `json:"threat_score"`
+		IsTor           bool   `json:"is_tor"`
+		IsProxy         bool   `json:"is_proxy"`
+		ProxyType       string `json:"proxy_type"`
+		IsAnonymous     bool   `json:"is_anonymous"`
+		IsKnownAttacker bool   `json:"is_known_attacker"`
+		IsCloudProvider bool   `json:"is_cloud_provider"`
+	} `json:"security"`
 }
 
 // API base URL where we are going to append our queries
@@ -205,7 +226,6 @@ func (c *Client) GetGeolocationWithOptions(options Options) (GeolocationData, er
 	if includes != "" {
 		addQuery(u, "fields", includes)
 	}
-	fmt.Println(includes)
 
 	excludes := strings.Join(options.Exclude, ",")
 	if excludes != "" {
@@ -215,6 +235,15 @@ func (c *Client) GetGeolocationWithOptions(options Options) (GeolocationData, er
 	if options.Language != "" {
 		addQuery(u, "lang", options.Language)
 	}
+
+	var premium []string
+	if options.Security {
+		premium = append(premium, "security")
+	}
+	if options.Hostname {
+		premium = append(premium, "hostname")
+	}
+	addQuery(u, "include", strings.Join(premium, ","))
 
 	res, err := http.Get(u.String())
 	if err != nil {

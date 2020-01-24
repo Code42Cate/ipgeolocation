@@ -50,6 +50,10 @@ func main() {
 	options = Options{}
 	options.SetExcludes([]string{"currency", "time_zone", "country_flag", "geoname_id"})
 
+    // Premium features:
+	options.SetSecurity(true)
+	options.SetHostname(true)
+
 	d, err = c.GetGeolocationWithOptions(options)
 	fmt.Println(d) // You will still get the complete struct, just with default values in the fields you excluded.
 }
