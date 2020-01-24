@@ -168,8 +168,17 @@ func (c *Client) GetGeolocation(ip string) (GeolocationData, error) {
 		return data, err
 	}
 
-	if res.StatusCode != 200 {
-		return data, errors.New("got non 200 status code")
+	switch res.StatusCode {
+	case 400:
+		return data, errors.New("your subscription is paused from use")
+	case 401:
+		return data, errors.New("401 error code, permission denied")
+	case 403:
+		return data, errors.New("ip address or domain is not valid")
+	case 404:
+		return data, errors.New("ip not found in database")
+	case 423:
+		return data, errors.New("private ip address")
 	}
 
 	err = json.NewDecoder(res.Body).Decode(&data)
@@ -178,6 +187,7 @@ func (c *Client) GetGeolocation(ip string) (GeolocationData, error) {
 	}
 	return data, nil
 }
+
 // GetGeolocationWithOptions, GetGeolocation but with more options!:D
 func (c *Client) GetGeolocationWithOptions(options Options) (GeolocationData, error) {
 	var data GeolocationData
