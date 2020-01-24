@@ -50,7 +50,7 @@ func main() {
 	options = Options{}
 	options.SetExcludes([]string{"currency", "time_zone", "country_flag", "geoname_id"})
 
-    // Premium features:
+        // Premium features:
 	options.SetSecurity(true)
 	options.SetHostname(true)
 
