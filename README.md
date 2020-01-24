@@ -1,6 +1,6 @@
 [![GoDoc](http://img.shields.io/badge/go-documentation-blue.svg?style=flat-square)](https://godoc.org/github.com/Code42Cate/ipgeolocation)
 
-## API Client for ipgeolocation.io
+## IP Geolocation API Golang SDK
 
 This is a small, incomplete and unofficial library to provide easier access to the [ipgeolocation.io](https://ipgeolocation.io/documentation/ip-geolocation-api.html) API
 
