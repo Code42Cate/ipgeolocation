@@ -60,6 +60,4 @@ func main() {
 ```
 
 #### Planned Additions
-
-- Adding premium features which ipgeolocation.io provides
-- Unit tests?
+- None. I am not actively maintaining this library anymore.
