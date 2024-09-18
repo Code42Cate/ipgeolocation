@@ -136,11 +136,11 @@ type GeolocationData struct {
 	} `json:"currency"`
 	Timezone struct {
 		Name            string  `json:"name"`
-		Offset          int     `json:"offset"`
+		Offset          float64 `json:"offset"`
 		CurrentTime     string  `json:"current_time"`
 		CurrentTimeUnix float64 `json:"current_time_unix"`
 		IsDST           bool    `json:"is_dst"`
-		DSTSavings      int     `json:"dst_savings"`
+		DSTSavings      float64 `json:"dst_savings"`
 	} `json:"time_zone"`
 	Security struct {
 		ThreatScore     int    `json:"threat_score"`
